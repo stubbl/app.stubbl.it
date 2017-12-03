@@ -1,8 +1,11 @@
+const process = require('process')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 const config = merge(base, {
   entry: {
@@ -41,7 +44,7 @@ const config = merge(base, {
   ]
 })
 
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
   config.plugins.push(
     // Automatically generate the service worker.
     new SWPrecachePlugin({

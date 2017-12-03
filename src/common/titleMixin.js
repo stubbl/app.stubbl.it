@@ -1,3 +1,5 @@
+import process from 'process'
+
 const clientTitleMixin = {
   mounted () {
     const title = getTitle(this)

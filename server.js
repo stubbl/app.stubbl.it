@@ -1,3 +1,9 @@
+const process = require('process')
+const config = require('./src/config')
+
+const seq = require('seq-logging')
+const logger = new seq.Logger({ serverUrl: config.seq.url })
+
 const fs = require('fs')
 const path = require('path')
 const LRU = require('lru-cache')
@@ -82,7 +88,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 // headers.
 // 1-second microcache.
 // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
+app.use(microcache.cacheSeconds(1, request => useMicroCache && request.originalUrl))
 
 function render (request, response) {
   const requestStartedAt = Date.now()
@@ -96,10 +102,20 @@ function render (request, response) {
     } else if (error.code === 404) {
       response.status(404).send('404 | Page Not Found')
     } else {
+      logger.emit({
+        level: 'Warning',
+        timestamp: new Date(),
+        messageTemplate: 'Error during render. ErrorMessage="{ErrorMessage}" RequestUrl="{RequestUrl}"',
+        properties: {
+          ErrorMessage: error.message,
+          RequestUrl: request.url
+        }
+      })
+
       // Render error page or redirect.
       response.status(500).send('500 | Internal Server Error')
 
-      console.error(`Error during render. Code="${error.code}" URL="${request.url}"`)
+      console.error(`Error during render. ErrorMessage="${error.message}" RequestUrl="${request.url}"`)
       console.error(error.stack)
     }
   }

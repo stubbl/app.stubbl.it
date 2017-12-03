@@ -1,3 +1,4 @@
+const process = require('process')
 const path = require('path')
 const webpack = require('webpack')
 const vueConfig = require('./vue-loader.config')
@@ -40,14 +41,6 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '[name].[ext]?[hash]'
-        }
-      },
-      {
         test: /\.css$/,
         use: isProduction
           ? ExtractTextPlugin.extract({
@@ -55,6 +48,22 @@ module.exports = {
             fallback: 'vue-style-loader'
           })
           : ['vue-style-loader', 'css-loader']
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'img/[name].[hash].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'font/[name].[hash].[ext]'
+        }
       }
     ]
   },

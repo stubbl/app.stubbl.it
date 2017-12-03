@@ -3,8 +3,8 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import titleMixin from './utils/titleMixin'
-import * as filters from './utils/filters'
+import titleMixin from './common/titleMixin'
+import * as filters from './common/filters'
 
 // Mixin for handling the title.
 Vue.mixin(titleMixin)

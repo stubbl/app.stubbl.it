@@ -3,8 +3,6 @@ import 'es6-promise/auto'
 import { createApp } from './app'
 import ProgressBar from './components/ProgressBar.vue'
 
-const isProduction = process.env.NODE_ENV === 'production'
-
 // Global progress bar.
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
 document.body.appendChild(bar.$el)
@@ -67,6 +65,6 @@ router.onReady(() => {
 })
 
 // Service worker.
-if (isProduction && navigator.serviceWorker) {
+if (/* location.protocol === 'https:' && */ navigator.serviceWorker) {
   navigator.serviceWorker.register('/service-worker.js')
 }
